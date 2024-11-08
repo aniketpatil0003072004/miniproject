@@ -47,10 +47,12 @@ body {
   }
   
   li {
-    background-color: #fff;
+    background-color: #c6c6c6;
     margin: 10px;
     padding: 10px;
     border-radius: 5px;
+    border: 1px solid black;
+    box-shadow: 0 4px 4px  rgba(0, 0, 0, 0.159);
   }
   
   li button {
@@ -64,6 +66,8 @@ body {
     padding: 10px;
     margin: 10px;
     font-size: 1em;
+    background-color: #c6c6c6;
+    border-radius: 6px ;
   }
   
   #todoForm input[type="text"],
@@ -86,8 +90,8 @@ body {
   #calendar {
     max-width: 90%;
     margin: 0 auto;
-    height: auto; /* Ensure the calendar has a height */
-    min-height: 400px; /* Set a minimum height for the calendar */
+    height: auto; 
+    min-height: 400px; 
   }
   
   .fc .fc-toolbar-title {
@@ -101,6 +105,24 @@ body {
     padding: 10px;
     border-radius: 6px;
   }
+  
+  @media only screen and (max-width: 510px) {
+    #calendar {
+      max-width: 100%;
+    }
+  
+    .fc .fc-toolbar-title {
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    .fc-header-toolbar{
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+  }
+  
   
   .container {
     text-align: center;
