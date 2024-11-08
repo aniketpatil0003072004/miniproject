@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Welcome to Your To-Do List</h1>
+        <div class="nav-buttons">
+          <button id="homeButton">Home</button>
+          <button id="todoListButton">To-Do List</button>
+          <button id="calendarButton">Calendar</button>
+          <button id="logoutButton">Logout</button>
+        </div>
+      </header>
+
+      <div id="homeSection" class="section">
+        <h2>About the Website</h2>
+        <p>
+          Welcome to the To-Do List application. Here you can manage your tasks and view them on a calendar.
+        </p>
+        <ul>
+          <li>Organize Your Day, One Task at a Time!</li>
+          <li>Plan, Track, and Complete with Ease.</li>
+          <li>Visualize Your Schedule with Calendar View.</li>
+          <li>Set Reminders & Never Miss a Deadline.</li>
+          <li>Access Your To-Do List Anywhere, Anytime.</li>
+          <li>Simple, Syncable, and Always Up-to-Date!</li>
+        </ul>
+      </div>
+      
+
+      <div id="todoSection" class="section">
+        <h2>To-Do List</h2>
+        <form id="todoForm">
+          <input
+            type="text"
+            id="taskInput"
+            placeholder="Enter a task"
+            required
+          />
+          <input type="date" id="dateInput" required />
+          <input type="time" id="timeInput" required />
+          <button type="submit">Add Task</button>
+        </form>
+        <ul id="taskList"></ul>
+      </div>
+
+      <div id="calendarSection" class="section">
+        <h2>Calendar</h2>
+        <div id="calendar"></div>
+      </div>
+
+      <!-- Notification bar -->
+      <div id="notificationBar" style="display: none;">
+        <p id="notificationText"></p>
+        <button onclick="closeNotification()">Close</button>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+    <script>
+      let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+      const todoForm = document.getElementById("todoForm");
+      const taskInput = document.getElementById("taskInput");
+      const dateInput = document.getElementById("dateInput");
+      const timeInput = document.getElementById("timeInput");
+      const taskList = document.getElementById("taskList");
+      const calendarEl = document.getElementById("calendar");
+      const notificationBar = document.getElementById("notificationBar");
+      const notificationText = document.getElementById("notificationText");
+
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: "dayGridMonth",
+        events: [],
+      });
+
+      // Render tasks in the To-Do List
+      function renderTasks() {
+        taskList.innerHTML = "";
+        tasks.forEach((task, index) => {
+          const li = document.createElement("li");
+          li.innerHTML = `
+                    <span>${task.text} (Due: ${task.date} at ${task.time})</span>
+                    <button onclick="deleteTask(${index})">Delete</button>
+                    <button onclick="editTask(${index})">Edit</button>
+                `;
+          taskList.appendChild(li);
+        });
+      }
+
+      // Add task functionality
+      todoForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const taskText = taskInput.value;
+        const taskDate = dateInput.value;
+        const taskTime = timeInput.value;
+
+        if (taskText && taskDate && taskTime) {
+          const task = {
+            text: taskText,
+            date: taskDate,
+            time: taskTime,
+          };
+
+          tasks.push(task);
+          localStorage.setItem("tasks", JSON.stringify(tasks));
+
+          calendar.addEvent({
+            title: taskText,
+            start: `${taskDate}T${taskTime}`,
+            allDay: false,
+          });
+
+          taskInput.value = "";
+          dateInput.value = "";
+          timeInput.value = "";
+          renderTasks();
+        }
+      });
+
+      // Delete task functionality
+      function deleteTask(index) {
+        tasks.splice(index, 1);
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+        renderTasks();
+        updateCalendarEvents();
+      }
+
+      // Edit task functionality
+      function editTask(index) {
+        const task = tasks[index];
+        taskInput.value = task.text;
+        dateInput.value = task.date;
+        timeInput.value = task.time;
+
+        deleteTask(index);
+      }
+
+      // Update calendar events from tasks
+      function updateCalendarEvents() {
+        calendar.removeAllEvents();
+        tasks.forEach((task) => {
+          calendar.addEvent({
+            title: task.text,
+            start: `${task.date}T${task.time}`,
+            allDay: false,
+          });
+        });
+      }
+
+      // Show the appropriate section when buttons are clicked
+      document
+        .getElementById("homeButton")
+        .addEventListener("click", function () {
+          showSection("homeSection");
+        });
+
+      document
+        .getElementById("todoListButton")
+        .addEventListener("click", function () {
+          showSection("todoSection");
+          renderTasks();
+        });
+
+      document
+        .getElementById("calendarButton")
+        .addEventListener("click", function () {
+          showSection("calendarSection");
+          calendar.render();
+          updateCalendarEvents();
+        });
+
+      // Logout button functionality
+      document
+        .getElementById("logoutButton")
+        .addEventListener("click", function () {
+          localStorage.removeItem("loggedInUser");
+          window.location.href = "login.html";
+        });
+
+      // Helper function to show the correct section
+      function showSection(sectionId) {
+        const sections = document.querySelectorAll(".section");
+        sections.forEach(function (section) {
+          section.style.display = "none";
+        });
+
+        const selectedSection = document.getElementById(sectionId);
+        if (selectedSection) {
+          selectedSection.style.display = "block";
+        }
+      }
+
+      // Show notification bar
+      function showNotification(task) {
+        notificationText.innerText = `Reminder: ${task.text} is due now!`;
+        notificationBar.style.display = "block";
+      }
+
+      // Close notification
+      function closeNotification() {
+        notificationBar.style.display = "none";
+      }
+
+      // Check for due tasks every minute
+      function checkDueTasks() {
+        const now = new Date();
+        tasks.forEach((task) => {
+          const taskDateTime = new Date(`${task.date}T${task.time}`);
+          if (
+            taskDateTime.getFullYear() === now.getFullYear() &&
+            taskDateTime.getMonth() === now.getMonth() &&
+            taskDateTime.getDate() === now.getDate() &&
+            taskDateTime.getHours() === now.getHours() &&
+            taskDateTime.getMinutes() === now.getMinutes()
+          ) {
+            showNotification(task);
+          }
+        });
+      }
+
+      setInterval(checkDueTasks, 60000); // Run checkDueTasks every minute
+
+      // Initial display (show home section by default)
+      showSection("homeSection");
+    </script>
+  </body>
+</html>
