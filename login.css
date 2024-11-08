@@ -16,6 +16,10 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 400px;
+    /* text-align: center; */
+}
+
+.header{
     text-align: center;
 }
 
@@ -24,20 +28,16 @@ h1 {
     margin-bottom: 20px;
 }
 
-label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
+
+
+form {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
 }
 
-input[type="text"], input[type="password"] {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1em;
-}
+
 
 button {
     width: 100%;
@@ -48,6 +48,9 @@ button {
     border-radius: 5px;
     cursor: pointer;
     font-size: 1em;
+    transition: all 0.3s ease-in-out;
+    margin-top: 1em;
+
 }
 
 button:hover {
@@ -66,3 +69,36 @@ a {
 a:hover {
     text-decoration: underline;
 }
+
+.user-container {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  
+}
+
+.pass-container{
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+}
+
+.user-label, .pass-label {
+text-align: center;
+color: #222;
+font-weight: bold;
+font-size: 1.4rem;
+}
+
+.user-input, .pass-input{
+    padding: 14px 20px;
+    border-radius: 6px;
+    border: none;
+    
+}
+
+.register-text{
+    text-align: center;
+}
+

@@ -9,18 +9,22 @@
 </head>
 <body>
     <div class="login-container">
-        <h1>Login</h1>
+        <h1 class="header">Login</h1>
         <form id="loginForm">
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" required>
+          <div class="user-container">
+            <label class="user-label" for="username">Username</label>
+            <input class="user-input" type="text" id="username" name="username" required>
+          </div>
 
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required>
+          <div class="pass-container">
+            <label class="pass-label" for="password">Password</label>
+            <input class="pass-input" type="password" id="password" name="password" required>
+          </div>
 
             <button type="submit">Login</button>
         </form>
 
-        <p>Don't have an account? <a href="register.html">Register</a></p>
+        <p class="register-text">Don't have an account? <a href="register.html">Register</a></p>
     </div>
     <script src="login.js"></script>
     <script>
